@@ -1,0 +1,46 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gallery/models/picture.dart';
+import 'package:gallery/providers/favorite_provider.dart';
+
+class PictureScreen extends ConsumerWidget {
+  final Picture picture;
+
+  const PictureScreen({super.key, required this.picture});
+
+  void _toggleFavorite(BuildContext context, WidgetRef ref) {
+    final isNowFavorite = ref
+        .read(favoritesProvider.notifier)
+        .toggleFavoriteStatus(picture.id);
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          isNowFavorite ? 'Added to favorites' : 'Removed from favorites',
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final favorites = ref.watch(favoritesProvider);
+    final isFavorite = favorites.contains(picture.id);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(picture.title),
+        actions: [
+          IconButton(
+            onPressed: () => _toggleFavorite(context, ref),
+            icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_outline),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Image.asset('assets/images/${picture.url}'),
+      ),
+    );
+  }
+}
