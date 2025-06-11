@@ -11,25 +11,31 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  final _pageController = PageController();
+
+  final _screens = [GalleryScreen(), FavoritesScreen()];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+    _pageController.animateToPage(
+      index,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.linear,
+    );
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget page;
-
-    if (_selectedIndex == 0) {
-      page = GalleryScreen();
-    } else {
-      page = FavoritesScreen();
-    }
-
     return Scaffold(
-      body: page,
+      body: PageView(controller: _pageController, children: _screens),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

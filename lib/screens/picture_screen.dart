@@ -34,7 +34,20 @@ class PictureScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () => _toggleFavorite(context, ref),
-            icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_outline),
+            icon: AnimatedSwitcher(
+              duration: Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) {
+                return RotationTransition(
+                  alignment: Alignment.topCenter,
+                  turns: Tween(begin: 0.6, end: 1.0).animate(animation),
+                  child: FadeTransition(opacity: animation, child: child),
+                );
+              },
+              child: Icon(
+                key: ValueKey(isFavorite),
+                isFavorite ? Icons.favorite : Icons.favorite_outline,
+              ),
+            ),
           ),
         ],
       ),
