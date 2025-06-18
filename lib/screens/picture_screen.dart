@@ -51,9 +51,7 @@ class PictureScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Image.asset('assets/images/${picture.url}'),
-      ),
+      body: SingleChildScrollView(child: Image.file(picture.image)),
     );
   }
 }

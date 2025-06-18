@@ -54,9 +54,7 @@ class _PicturesGridState extends State<PicturesGrid>
               child: InkWell(
                 onTap: () => widget.onPictureSelected(widget.pictures[index]),
                 child: Ink.image(
-                  image: AssetImage(
-                    'assets/images/${widget.pictures[index].url}',
-                  ),
+                  image: FileImage(widget.pictures[index].image),
                   fit: BoxFit.cover,
                 ),
               ),
