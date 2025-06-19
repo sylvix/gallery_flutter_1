@@ -27,6 +27,11 @@ final favoritesProvider = NotifierProvider<FavoritesNotifier, List<String>>(
 
 final favoritesPicturesProvider = Provider<List<Picture>>((ref) {
   final favoriteIds = ref.watch(favoritesProvider);
-  final allPictures = ref.watch(picturesProvider);
+  final allPictures = ref.watch(picturesProvider).value;
+
+  if (allPictures == null) {
+    return [];
+  }
+
   return allPictures.where((pic) => favoriteIds.contains(pic.id)).toList();
 });

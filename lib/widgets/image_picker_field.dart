@@ -15,11 +15,11 @@ class ImagePickerField extends StatefulWidget {
 class _ImagePickerFieldState extends State<ImagePickerField> {
   File? _selectedImage;
 
-  void _takePhoto() async {
+  void _takePhoto(ImageSource source) async {
     final imagePicker = ImagePicker();
 
     final image = await imagePicker.pickImage(
-      source: ImageSource.camera,
+      source: source,
       preferredCameraDevice: CameraDevice.rear,
       maxWidth: 1024,
     );
@@ -46,23 +46,31 @@ class _ImagePickerFieldState extends State<ImagePickerField> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    Widget content = ElevatedButton.icon(
-      icon: Icon(Icons.camera_alt),
-      label: Text('Take a photo'),
-      onPressed: _takePhoto,
+    Widget content = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ElevatedButton.icon(
+          icon: Icon(Icons.camera_alt),
+          label: Text('Take a photo'),
+          onPressed: () => _takePhoto(ImageSource.camera),
+        ),
+        SizedBox(height: 8),
+        ElevatedButton.icon(
+          icon: Icon(Icons.image_search),
+          label: Text('Choose from gallery'),
+          onPressed: () => _takePhoto(ImageSource.gallery),
+        ),
+      ],
     );
 
     if (_selectedImage != null) {
       content = Stack(
         children: [
-          Transform.flip(
-            flipX: true,
-            child: Image.file(
-              _selectedImage!,
-              width: double.infinity,
-              alignment: Alignment.bottomLeft,
-              fit: BoxFit.cover,
-            ),
+          Image.file(
+            _selectedImage!,
+            width: double.infinity,
+            alignment: Alignment.bottomLeft,
+            fit: BoxFit.cover,
           ),
           Positioned(
             bottom: 4,

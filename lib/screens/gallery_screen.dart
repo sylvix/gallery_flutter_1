@@ -8,20 +8,21 @@ import 'package:gallery/widgets/pictures_grid.dart';
 class GalleryScreen extends ConsumerWidget {
   const GalleryScreen({super.key});
 
-  void _goToNewPictureScreen(BuildContext context) {
-    Navigator.of(
+  void _goToNewPictureScreen(BuildContext context, WidgetRef ref) async {
+    await Navigator.of(
       context,
     ).push(MaterialPageRoute(builder: (ctx) => NewPictureScreen()));
+    ref.invalidate(picturesProvider);
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pictures = ref.watch(picturesProvider);
+    final picturesState = ref.watch(picturesProvider);
     Widget content = Center(child: Text('No images yet.'));
 
-    if (pictures.isNotEmpty) {
+    if (picturesState.hasValue) {
       content = PicturesGrid(
-        pictures: pictures,
+        pictures: picturesState.value!,
         onPictureSelected: (picture) {
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -39,7 +40,7 @@ class GalleryScreen extends ConsumerWidget {
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
-              _goToNewPictureScreen(context);
+              _goToNewPictureScreen(context, ref);
             },
           ),
         ],

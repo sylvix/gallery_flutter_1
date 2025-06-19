@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gallery/models/picture.dart';
 import 'package:gallery/providers/favorite_provider.dart';
+import 'package:gallery/providers/picture_upload_provider.dart';
 
 class PictureScreen extends ConsumerWidget {
   final Picture picture;
@@ -51,7 +52,11 @@ class PictureScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(child: Image.file(picture.image)),
+      body: SingleChildScrollView(
+        child: Image.network(
+          ref.read(pictureUploadProvider.notifier).getImageUrl(picture.image),
+        ),
+      ),
     );
   }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gallery/models/picture.dart';
+import 'package:gallery/providers/picture_upload_provider.dart';
 
-class PicturesGrid extends StatefulWidget {
+class PicturesGrid extends ConsumerStatefulWidget {
   final List<Picture> pictures;
   final void Function(Picture picture) onPictureSelected;
 
@@ -12,10 +14,10 @@ class PicturesGrid extends StatefulWidget {
   });
 
   @override
-  State<PicturesGrid> createState() => _PicturesGridState();
+  ConsumerState<PicturesGrid> createState() => _PicturesGridState();
 }
 
-class _PicturesGridState extends State<PicturesGrid>
+class _PicturesGridState extends ConsumerState<PicturesGrid>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
@@ -54,7 +56,11 @@ class _PicturesGridState extends State<PicturesGrid>
               child: InkWell(
                 onTap: () => widget.onPictureSelected(widget.pictures[index]),
                 child: Ink.image(
-                  image: FileImage(widget.pictures[index].image),
+                  image: NetworkImage(
+                    ref
+                        .read(pictureUploadProvider.notifier)
+                        .getImageUrl(widget.pictures[index].image),
+                  ),
                   fit: BoxFit.cover,
                 ),
               ),
